@@ -25,7 +25,10 @@ namespace :db do
     csv_info.each do |model, location|
       model.destroy_all
       CSV.foreach(location, headers: true) do |row|
-        model.create!(row.to_hash)
+        if row["unit_price"]
+          row["unit_price"].insert(-3, '.')
+        end
+          model.create!(row.to_hash)
       end
     end
   end
