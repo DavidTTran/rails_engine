@@ -5,6 +5,10 @@ FactoryBot.define do
     unit_price { 1.5 }
     updated_at { "MyString" }
     created_at { "MyString" }
-    merchant_id { nil }
+    merchant_id {  }
+  end
+
+  factory :post do
+    association :item
   end
 end
