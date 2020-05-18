@@ -18,4 +18,20 @@ describe "MerchantItems API" do
       expect(item).to have_value("items")
     end
   end
+
+  it "can return the merchant associated with an item" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    item_1 = create(:item, merchant: merchant_1)
+    item_2 = create(:item, merchant: merchant_2)
+
+    get "/api/v1/items/#{item_1.id}/merchant"
+    parsed_merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+
+    expect(parsed_merchant.count).to eq(1)
+    expect(parsed_merchant["data"]).to have_value("merchants")
+    expect(parsed_merchant["data"]).to have_value(merchant_1.id.to_s)
+  end
 end
