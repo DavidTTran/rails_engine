@@ -1,10 +1,10 @@
 class Api::V1::Merchants::SearchController < ApplicationController
   def index
+    merchants = []
     search_params.each do |key, value|
-      merchants = []
       merchants << Merchant.where("#{key} ilike ?", "%#{value}%")
-      render json: MerchantSerializer.new(merchants.flatten.uniq)
     end
+    render json: MerchantSerializer.new(merchants.flatten.uniq)
   end
 
   def show

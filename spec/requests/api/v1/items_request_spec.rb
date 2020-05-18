@@ -39,10 +39,10 @@ describe "Items API" do
 
     item_params = { "name" => "Test Item",
                     "description" => "Test Des",
-                    "unit_price" => 2.1 }
+                    "unit_price" => 2.1,
+                    "merchant_id" => merchant.id }
 
-    post "/api/v1/items", params: { item: item_params,
-                                    merchant_id: merchant.id }
+    post "/api/v1/items", params: item_params
     expect(response).to be_successful
     item = Item.last
     expect(item.name).to eq("Test Item")
@@ -58,7 +58,7 @@ describe "Items API" do
                         "description": "New Description",
                         "unit_price": 5.0 }
 
-    put "/api/v1/items/#{item.id}", params: { item: new_item_params }
+    put "/api/v1/items/#{item.id}", params: new_item_params
     expect(response).to be_successful
 
     updated_item = Item.find(item.id)

@@ -12,7 +12,6 @@ describe "Merchants API" do
       expect(merchant).to have_key("attributes")
       expect(merchant).to have_key("type")
       expect(merchant).to have_key("id")
-      expect(merchant).to have_value({ "name" => "MyString" })
     end
   end
 
@@ -27,7 +26,7 @@ describe "Merchants API" do
 
   it "can create a new merchant" do
     merchant_params = { name: "John" }
-    post "/api/v1/merchants", params: { merchant: merchant_params }
+    post "/api/v1/merchants", params: merchant_params
     merchant = Merchant.last
 
     expect(response).to be_successful
@@ -38,7 +37,7 @@ describe "Merchants API" do
     id = create(:merchant).id
     previous_name = Merchant.last.name
     merchant_params = { name: "James" }
-    put "/api/v1/merchants/#{id}", params: { merchant: merchant_params }
+    put "/api/v1/merchants/#{id}", params: merchant_params
     merchant = Merchant.find_by(id: id)
 
     expect(response).to be_successful

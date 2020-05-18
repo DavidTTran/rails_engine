@@ -7,7 +7,7 @@ describe "merchants search" do
     create(:merchant, name: "Lousiville")
     create(:merchant, name: "Temple")
 
-    find_params = "?name=baker"
+    find_params = "?name=BAKE"
     get "/api/v1/merchants/find_all#{find_params}"
     expect(response).to be_successful
     merchants = JSON.parse(response.body)
