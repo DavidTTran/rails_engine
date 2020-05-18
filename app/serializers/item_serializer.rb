@@ -1,7 +1,6 @@
-class ItemSerializer < ActiveModel::Serializer
-  def attributes(_)
-    { "name": self.object.name,
-      "description": self.object.description,
-      "unit_price": self.object.unit_price }
-  end
+class ItemSerializer
+  include FastJsonapi::ObjectSerializer
+  set_type :item
+  attributes :name, :description, :unit_price
+  belongs_to :merchant
 end

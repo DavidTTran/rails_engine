@@ -8,7 +8,7 @@ class Api::V1::Items::SearchController < ApplicationController
         items << Item.where("#{key} ilike ?", "%#{value}%")
       end
     end
-    render json: items.flatten
+    render json: ItemSerializer.new(items.flatten.uniq)
   end
 
   def show
@@ -20,7 +20,7 @@ class Api::V1::Items::SearchController < ApplicationController
         item << Item.where("#{key} ilike ?", "%#{value}%").limit(1)
       end
     end
-    render json: item.flatten
+    render json: ItemSerializer.new(item.flatten)
   end
 
   private

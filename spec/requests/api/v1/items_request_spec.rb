@@ -12,9 +12,8 @@ describe "Items API" do
 
     expect(items["data"].count).to eq(3)
     items["data"].each do |item|
-      expect(item).to have_value("items")
       expect(item["attributes"]).to have_key("description")
-      expect(item["attributes"]).to have_key("unit-price")
+      expect(item["attributes"]).to have_key("unit_price")
       expect(item["attributes"]).to have_key("name")
     end
   end
@@ -29,7 +28,7 @@ describe "Items API" do
     expect(response).to be_successful
     expect(item_response.count).to eq(1)
     expect(item_response["data"]["attributes"]).to have_key("description")
-    expect(item_response["data"]["attributes"]).to have_key("unit-price")
+    expect(item_response["data"]["attributes"]).to have_key("unit_price")
     expect(item_response["data"]["attributes"]).to have_key("name")
     expect(item_response["data"]["attributes"]).to have_value(item.name)
   end
@@ -77,7 +76,6 @@ describe "Items API" do
     expect(merchant.items.count).to eq(2)
 
     delete "/api/v1/items/#{item_1.id}"
-
     expect(response).to be_successful
     expect(merchant.items.count).to eq(1)
   end

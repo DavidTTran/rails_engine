@@ -14,8 +14,10 @@ describe "MerchantItems API" do
     expect(parsed_items["data"].count).to eq(3)
     parsed_items["data"].each do |item|
       expect(item).to have_key("id")
-      expect(item).to have_key("type")
-      expect(item).to have_value("items")
+      expect(item).to have_value("item")
+      expect(item["attributes"]).to have_key("name")
+      expect(item["attributes"]).to have_key("description")
+      expect(item["attributes"]).to have_key("unit_price")
     end
   end
 
@@ -29,9 +31,7 @@ describe "MerchantItems API" do
     parsed_merchant = JSON.parse(response.body)
 
     expect(response).to be_successful
-
-    expect(parsed_merchant.count).to eq(1)
-    expect(parsed_merchant["data"]).to have_value("merchants")
+    expect(parsed_merchant["data"]).to have_value("merchant")
     expect(parsed_merchant["data"]).to have_value(merchant_1.id.to_s)
   end
 end

@@ -6,7 +6,6 @@ describe "Merchants API" do
 
     get '/api/v1/merchants'
     merchants = JSON.parse(response.body)
-
     expect(response).to be_successful
     expect(merchants["data"].count).to eq(3)
     merchants["data"].each do |merchant|
