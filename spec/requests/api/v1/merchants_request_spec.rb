@@ -48,10 +48,11 @@ describe "Merchants API" do
   end
 
   it "can destroy a merchant" do
-    id = create(:merchant).id
+    merchant = create(:merchant)
+    create(:item, merchant: merchant)
     create_list(:merchant, 2)
 
-    delete "/api/v1/merchants/#{id}"
+    delete "/api/v1/merchants/#{merchant.id}"
     expect(response).to be_successful
     expect(Merchant.all.count).to eq(2)
   end
