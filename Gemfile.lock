@@ -38,6 +38,7 @@ GEM
       activemodel (= 5.1.7)
       activesupport (= 5.1.7)
       arel (~> 8.0)
+    activerecord-reset-pk-sequence (0.2.1)
     activesupport (5.1.7)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
@@ -162,6 +163,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  activerecord-reset-pk-sequence
   byebug
   csv
   factory_bot_rails
