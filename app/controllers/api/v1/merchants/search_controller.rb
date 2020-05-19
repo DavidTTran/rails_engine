@@ -8,6 +8,10 @@ class Api::V1::Merchants::SearchController < ApplicationController
   end
 
   def show
+    merchant = search_params.to_h.reduce([]) do |acc, (key, value)|
+                 acc << Merchant.where("#{key} ilike ?", "%#{value}%").limit(1)
+               end.flatten
+    render json: MerchantSerializer.new(merchant) 
   end
 
   private

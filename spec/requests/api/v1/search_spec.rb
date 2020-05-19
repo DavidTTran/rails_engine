@@ -1,18 +1,27 @@
 require 'rails_helper'
 
 describe "merchants search" do
-  it "can find merchants with names that include the params" do
+  before(:each) do
+    Merchant.destroy_all
     create(:merchant, name: "Bakery")
     create(:merchant, name: "London Bakers")
     create(:merchant, name: "Lousiville")
     create(:merchant, name: "Temple")
-
-    find_params = "?name=BAKE"
-    get "/api/v1/merchants/find_all#{find_params}"
+  end
+  it "can find merchants with names that include the params" do
+    get "/api/v1/merchants/find_all?name=BAKE"
     expect(response).to be_successful
     merchants = JSON.parse(response.body)
 
     expect(merchants["data"].count).to eq(2)
+  end
+
+  it "can find the first merchant that includes params" do
+    get "/api/v1/merchants/find?name=BAKER"
+    expect(response).to be_successful
+    merchant = JSON.parse(response.body)
+    expect(merchant["data"].count).to eq(1)
+    expect(merchant["data"].first["attributes"]).to have_value("Bakery")
   end
 end
 
@@ -20,11 +29,23 @@ describe "items search" do
   before(:each) do
     @merchant_1 = create(:merchant, name: "Bakery")
     @merchant_2 = create(:merchant, name: "London Bakers")
-    @item_1_params = { name: "Candy", description: "Hot and spicy", unit_price: 10.0, created_at: "2020-01-13 14:53:59 UTC" }
-    @item_2_params = { name: "Can-o-Beans", description: "Comes in a jar", unit_price: 5.0 }
-    @item_3_params = { name: "Jellybeans", description: "Never know what you're going to get", unit_price: 1.2, created_at: "2012-03-27 14:54:02 UTC" }
-    @item_4_params = { name: "Jar of pickles", description: "jar of pickles", unit_price: 2.4 }
-    @item_5_params = { name: "Car", description: "buy our car", unit_price: 5.0 }
+    @item_1_params = { name: "Candy",
+                       description: "Hot and spicy",
+                       unit_price: 10.0,
+                       created_at: "2020-01-13 14:53:59 UTC" }
+    @item_2_params = { name: "Can-o-Beans",
+                       description: "Comes in a jar",
+                       unit_price: 5.0 }
+    @item_3_params = { name: "Jellybeans",
+                       description: "Never know what you're going to get",
+                       unit_price: 1.2,
+                       created_at: "2012-03-27 14:54:02 UTC" }
+    @item_4_params = { name: "Jar of pickles",
+                       description: "jar of pickles",
+                       unit_price: 2.4 }
+    @item_5_params = { name: "Car",
+                       description: "buy our car",
+                       unit_price: 5.0 }
     @merchant_1.items.create(@item_1_params)
     @merchant_1.items.create(@item_2_params)
     @merchant_1.items.create(@item_3_params)
