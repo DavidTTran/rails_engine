@@ -34,6 +34,7 @@ describe "Merchants API" do
   end
 
   it "can update a merchant" do
+    create_list(:merchant, 3)
     id = create(:merchant).id
     previous_name = Merchant.last.name
     merchant_params = { name: "James" }

@@ -1,23 +1,24 @@
 class Api::V1::MerchantsController < ApplicationController
   def index
-    render json: MerchantSerializer.new(Merchant.all)
+    render json: serialize(Merchant.all)
   end
 
   def show
-    render json: MerchantSerializer.new(Merchant.find(params[:id]))
+    render json: serialize(Merchant.find(params[:id]))
   end
 
   def create
-    render json: MerchantSerializer.new(Merchant.create(merchant_params))
+    render json: serialize(Merchant.create(merchant_params))
   end
 
   def update
-    render json: MerchantSerializer.new(Merchant.update(merchant_params))
+    merchant = Merchant.update(params[:id], merchant_params)
+    render json: serialize(merchant)
   end
 
   def destroy
     delete_items
-    render json: MerchantSerializer.new(Merchant.destroy(params[:id]))
+    render json: serialize(Merchant.destroy(params[:id]))
   end
 
   private
@@ -28,5 +29,9 @@ class Api::V1::MerchantsController < ApplicationController
 
   def delete_items
     Merchant.find(params[:id]).items.destroy_all
+  end
+
+  def serialize(object)
+    MerchantSerializer.new(object)
   end
 end

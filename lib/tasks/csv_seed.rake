@@ -1,6 +1,5 @@
 require 'CSV'
 require './app/models/application_record.rb'
-require './app/models/customer.rb'
 
 desc "seeds DB with all csv files"
 namespace :db do
@@ -26,10 +25,13 @@ namespace :db do
       model.destroy_all
       CSV.foreach(location, headers: true) do |row|
         if row["unit_price"]
-          row["unit_price"].insert(-3, '.')
+          row["unit_price"] = (row["unit_price"].to_f / 100.0).round(2)
         end
           model.create!(row.to_hash)
       end
+    end
+    ActiveRecord::Base.connection.tables.each do |t|
+      ActiveRecord::Base.connection.reset_pk_sequence!(t)
     end
   end
 end
