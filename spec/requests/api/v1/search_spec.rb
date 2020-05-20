@@ -1,34 +1,13 @@
 require 'rails_helper'
 
-describe "merchants search" do
+describe "search" do
   before(:each) do
     Merchant.destroy_all
-    create(:merchant, name: "Bakery")
-    create(:merchant, name: "London Bakers")
-    create(:merchant, name: "Lousiville")
-    create(:merchant, name: "Temple")
-  end
-  it "can find merchants with names that include the params" do
-    get "/api/v1/merchants/find_all?name=BAKE"
-    expect(response).to be_successful
-    merchants = JSON.parse(response.body)
-
-    expect(merchants["data"].count).to eq(2)
-  end
-
-  it "can find the first merchant that includes params" do
-    get "/api/v1/merchants/find?name=BAKER"
-    expect(response).to be_successful
-    merchant = JSON.parse(response.body)
-    expect(merchant["data"].count).to eq(1)
-    expect(merchant["data"].first["attributes"]).to have_value("Bakery")
-  end
-end
-
-describe "items search" do
-  before(:each) do
     @merchant_1 = create(:merchant, name: "Bakery")
     @merchant_2 = create(:merchant, name: "London Bakers")
+    create(:merchant, name: "Lousiville")
+    create(:merchant, name: "Temple")
+
     @item_1_params = { name: "Candy",
                        description: "Hot and spicy",
                        unit_price: 10.0,
@@ -53,50 +32,76 @@ describe "items search" do
     @merchant_2.items.create(@item_5_params)
   end
 
-  it "can find one item with passed params name" do
-    get "/api/v1/items/find?name=can"
-    can_name = JSON.parse(response.body)
-    expect(response).to be_successful
-    expect(can_name["data"].first["attributes"]).to have_value("Hot and spicy")
-    expect(can_name["data"].first["attributes"]).to have_value("Candy")
+  after(:each) do
+    [InvoiceItem, Invoice, Item, Customer, Merchant].each do |model|
+      model.destroy_all
+    end
   end
 
-  it "can find one item with passed params description" do
-    get "/api/v1/items/find?description=car"
-    car_description = JSON.parse(response.body)
-    expect(response).to be_successful
-    expect(car_description["data"].first["attributes"]).to have_value("Car")
-    expect(car_description["data"].first["attributes"]).to have_value("buy our car")
+  describe "merchant searches" do
+    it "can find merchants with names that include the params" do
+      get "/api/v1/merchants/find_all?name=BAKE"
+      expect(response).to be_successful
+      merchants = JSON.parse(response.body)
+
+      expect(merchants["data"].count).to eq(2)
+    end
+
+    it "can find the first merchant that includes params" do
+      get "/api/v1/merchants/find?name=BAKER"
+      expect(response).to be_successful
+      merchant = JSON.parse(response.body)
+      expect(merchant.count).to eq(1)
+      expect(merchant["data"]["attributes"]).to have_value("Bakery")
+    end
   end
 
-  it "can find one item with passed params created_at" do
-    get "/api/v1/items/find?created_at=2012-03-27"
-    date_created = JSON.parse(response.body)
-    expect(response).to be_successful
-    expect(date_created["data"].first["attributes"]).to have_value("Jellybeans")
-  end
+  describe "items search" do
+    it "can find one item with passed params name" do
+      get "/api/v1/items/find?name=can"
+      can_name = JSON.parse(response.body)
+      expect(response).to be_successful
+      expect(can_name["data"]["attributes"]).to have_value("Hot and spicy")
+      expect(can_name["data"]["attributes"]).to have_value("Candy")
+    end
 
-  it "can find all items with passed params names" do
-    get "/api/v1/items/find_all?name=can"
-    can_name = JSON.parse(response.body)
-    expect(can_name["data"].count).to eq(2)
-  end
+    it "can find one item with passed params description" do
+      get "/api/v1/items/find?description=car"
+      car_description = JSON.parse(response.body)
+      expect(response).to be_successful
+      expect(car_description["data"]["attributes"]).to have_value("Car")
+      expect(car_description["data"]["attributes"]).to have_value("buy our car")
+    end
 
-  it "can find all items with passed params descriptions" do
-    get "/api/v1/items/find_all?description=jar"
-    jar_description = JSON.parse(response.body)
-    expect(jar_description["data"].count).to eq(2)
-  end
+    it "can find one item with passed params created_at" do
+      get "/api/v1/items/find?created_at=2012-03-27"
+      date_created = JSON.parse(response.body)
+      expect(response).to be_successful
+      expect(date_created["data"]["attributes"]).to have_value("Jellybeans")
+    end
 
-  it "can find all items with passed params prices" do
-    get "/api/v1/items/find_all?unit_price=5.0"
-    unit_price_5 = JSON.parse(response.body)
-    expect(unit_price_5["data"].count).to eq(2)
-  end
+    it "can find all items with passed params names" do
+      get "/api/v1/items/find_all?name=can"
+      can_name = JSON.parse(response.body)
+      expect(can_name["data"].count).to eq(2)
+    end
 
-  it "can find all items with passed params name and description" do
-    get "/api/v1/items/find_all?name=can&description=jar"
-    can_name_jar_des = JSON.parse(response.body)
-    expect(can_name_jar_des["data"].count).to eq(3)
+    it "can find all items with passed params descriptions" do
+      get "/api/v1/items/find_all?description=jar"
+      jar_description = JSON.parse(response.body)
+      expect(jar_description["data"].count).to eq(2)
+    end
+
+    it "can find all items with passed params prices" do
+      get "/api/v1/items/find_all?unit_price=5.0"
+      unit_price_5 = JSON.parse(response.body)
+      expect(unit_price_5["data"].count).to eq(2)
+    end
+
+    it "can find all items with passed params name and description" do
+      get "/api/v1/items/find_all?name=can&description=jar"
+      can_name_jar_des = JSON.parse(response.body)
+      expect(can_name_jar_des["data"].count).to eq(3)
+    end
   end
 end
