@@ -37,6 +37,7 @@ group :development, :test do
   gem 'csv'
   gem 'rspec-rails'
   gem 'factory_bot_rails'
+  gem 'simplecov'
 end
 
 group :development do

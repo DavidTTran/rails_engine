@@ -13,5 +13,6 @@
 !/log/.keep
 !/tmp/.keep
 .rspec
+/coverage
 
 .byebug_history
