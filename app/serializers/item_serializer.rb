@@ -5,6 +5,6 @@ class ItemSerializer
   belongs_to :merchant
 
   attribute :merchant_id do |object|
-    object.merchant.id
+    object.merchant_id
   end
 end

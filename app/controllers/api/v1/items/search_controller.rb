@@ -5,7 +5,7 @@ class Api::V1::Items::SearchController < ApplicationController
   end
 
   def show
-    item = filter_results(1)
+    item = filter_results(1).first
     render json: serialize(item)
   end
 
