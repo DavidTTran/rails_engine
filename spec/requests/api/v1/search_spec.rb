@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe "search" do
   before(:each) do
-    Merchant.destroy_all
     @merchant_1 = create(:merchant, name: "Bakery")
     @merchant_2 = create(:merchant, name: "London Bakers")
     create(:merchant, name: "Lousiville")
@@ -43,7 +42,6 @@ describe "search" do
       get "/api/v1/merchants/find_all?name=BAKE"
       expect(response).to be_successful
       merchants = JSON.parse(response.body)
-
       expect(merchants["data"].count).to eq(2)
     end
 

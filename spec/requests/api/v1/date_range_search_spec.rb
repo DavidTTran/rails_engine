@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "revenue filter" do
+describe "merchant filter" do
   before(:each) do
     #merchants
     @merchant_1 = create(:merchant, name: "Bakery")
@@ -51,19 +51,23 @@ describe "revenue filter" do
     @invoice_items_1_params = { item_id: @item_1.id,
                                 invoice_id: @invoice_1.id,
                                 quantity: 5,
-                                unit_price: 10.0 }
+                                unit_price: 2.0,
+                                created_at: "2020-05-20"}
     @invoice_items_2_params = { item_id: @item_2.id,
                                 invoice_id: @invoice_2.id,
                                 quantity: 13,
-                                unit_price: 5.0 }
+                                unit_price: 5.0,
+                                created_at: "2020-05-17"}
     @invoice_items_3_params = { item_id: @item_3.id,
                                 invoice_id: @invoice_3.id,
                                 quantity: 100,
-                                unit_price: 100001.10 }
+                                unit_price: 100001.10,
+                                created_at: "2020-05-10"}
     @invoice_items_4_params = { item_id: @item_4.id,
                                 invoice_id: @invoice_4.id,
-                                quantity: 50,
-                                unit_price: 111.1 }
+                                quantity: 5,
+                                unit_price: 1.0,
+                                created_at: "2020-05-21"}
     InvoiceItem.create!(@invoice_items_1_params)
     InvoiceItem.create!(@invoice_items_2_params)
     InvoiceItem.create!(@invoice_items_3_params)
@@ -91,26 +95,14 @@ describe "revenue filter" do
     Transaction.create!(@transaction_3_params)
     Transaction.create!(@transaction_4_params)
   end
-
-  after(:each) do
-    [Transaction, InvoiceItem, Invoice, Item, Customer, Merchant].each do |model|
-      model.destroy_all
-    end
-  end
-
-  it "can find the merchants with highest revenue" do
-    get "/api/v1/merchants/most_revenue?quantity=2"
-    merchants = JSON.parse(response.body)
+  it "can return revenue from a given date range" do
+    start_date = "2020-05-20"
+    end_date = "2020-05-22"
+    get "/api/v1/revenue?start=#{start_date}&end=#{end_date}"
     expect(response).to be_successful
-    expect(merchants["data"][0]["attributes"]).to have_value(@merchant_2.name)
-    expect(merchants["data"][1]["attributes"]).to have_value(@merchant_3.name)
-  end
+    revenue = JSON.parse(response.body)
 
-  it "should get total revenue for a merchant" do
-    get "/api/v1/merchants/#{@merchant_1.id}/revenue"
-    merchant = JSON.parse(response.body)
-    expect(response).to be_successful
-    # This test fails for reason - it's doubling per every new .joins argument
-    # expect(merchant["data"]["attributes"]).to have_value("115.0")
+    # expect(revenue["data"]["attributes"]).to have_key("revenue")
+    # expect(revenue["data"]["attributes"]).to have_value(15.0)
   end
 end
